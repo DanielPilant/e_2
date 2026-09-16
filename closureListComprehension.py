@@ -1,6 +1,7 @@
 from functools import reduce
 import time
 from datetime import datetime, timedelta
+from decimal import Decimal
 import math
 
 # =============== 1 ===============
@@ -50,7 +51,9 @@ even_result = reduce(lambda_func_1, even_list, 1)
 odd_result = reduce(lambda_func_2, odd_list, 0)
 
 #==3
-#sum_list_output_1 = reduce(lambda x,y: x+y, [even_result, odd_result])
+# even_result is too large to add to a float, so both results are summed as Decimal
+sum_list_output_1 = reduce(lambda x,y: x+y, map(Decimal, [even_result, odd_result]))
+print(f"Sum of even and odd results: {sum_list_output_1}")
 
 # =============== 3 ===============
 
@@ -122,7 +125,7 @@ def capitalize_text(text: str):
     return text.title()
 
 def add_stars(text: str):
-    return f"*** {text} ***"
+    return f"***{text}***"
 
 #==bet
 def create_pipeline():
@@ -138,16 +141,21 @@ def main():
     if user_input_3.isdigit() and int(user_input_3) > 0:
         print(armstrong_range(1, int(user_input_3)))
     else:
-        print("Invalid input")
- 
+        print("invalid input")
+
     #== Targil5b
     n_powers = input("Enter number of powers:\n")
     if n_powers.isdigit():
         result_map = generate_power_map(int(n_powers))
         print(type(result_map))
-        base_val = int(input("Enter base:\n"))
-        print(tuple(map(lambda f: f(base_val), result_map)))
-        
+        base_val = input("Enter base:\n")
+        if base_val.removeprefix("-").isdigit():
+            print(tuple(map(lambda f: f(int(base_val)), result_map)))
+        else:
+            print("invalid input")
+    else:
+        print("invalid input")
+
     #== Targil7c
     
     p = create_pipeline()
@@ -156,7 +164,7 @@ def main():
     p = add_to_pipeline(p, add_stars)
     user_txt = input("enter text:\n")
     if not user_txt.strip():
-        print("Invalid input")
+        print("invalid input")
     else:
         print(p(user_txt))
 
