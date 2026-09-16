@@ -1,5 +1,6 @@
 from functools import reduce
 import time
+from datetime import datetime, timedelta
 import math
 
 # =============== 1 ===============
@@ -67,21 +68,97 @@ def armstrong_range(n1, n2):
 
 #==gimel
 # in main function
-
+print(armstrong_range(1, 1000))
 # =============== 4 ===============
 
-def date_generator(date: str, num_of_dates: int, num__of_jumps: int):
-    pass 
+def date_generator(date_str: str, num_of_dates: int, num_of_jumps: int):
+    start_date = datetime.strptime(date_str, "%Y-%m-%d")
+    return list(map(lambda i: (start_date + timedelta(days=i*num_of_jumps)).strftime("%Y-%m-%d"), range(num_of_dates)))
 
+# =============== 5 ===============
 
+#==Alef
+def power_function(exponent: int):
+    return lambda base: base ** exponent
 
+#==bet
+def generate_power_map(n: int):
+    return map(power_function, range(n))
+    
+#==gimel
+def taylor_e(x, n):
+    powers = map(lambda f: f(x), generate_power_map(n))
+    factorials = map(math.factorial, range(n))
+    terms = map(lambda p, f: p/f, powers, factorials)
+    return reduce(lambda x, y: x + y, terms)
+
+# ============== 6 ===============
+def task_manager():
+    tasks = {}
+    
+    def add_task(task, status="incomplete"):
+        tasks[task] = status
+    
+    def get_tasks():
+        return tasks
+    
+    def complete_task(task):
+        if task in tasks:
+            tasks[task] = "complete"    
+            
+    return {
+        "add_task": add_task,
+        "get_tasks": get_tasks,
+        "complete_task": complete_task
+    }
+    
+# =============== 7 ===============
+
+#==Aleph
+def clean_text(text: str):
+    return text.strip()
+
+def capitalize_text(text: str):
+    return text.title()
+
+def add_stars(text: str):
+    return f"*** {text} ***"
+
+#==bet
+def create_pipeline():
+    return lambda x: x
+
+def add_to_pipeline(pipeline, func):
+    return lambda x: func(pipeline(x))
+
+# =============== main ===============
 def main():
-    if_armstrong = input("Enter a number to check if it is an Armstrong number: ")
-    if if_armstrong.isdigit():
-        print(is_armstrong(int(if_armstrong)))
+    # == Targi3
+    user_input_3 = input("Enter a number to check Armstrong range: ")
+    if user_input_3.isdigit() and int(user_input_3) > 0:
+        print(armstrong_range(1, int(user_input_3)))
     else:
-        print("Please enter a valid integer.")
-
+        print("Invalid input")
+ 
+    #== Targil5b
+    n_powers = input("Enter number of powers:\n")
+    if n_powers.isdigit():
+        result_map = generate_power_map(int(n_powers))
+        print(type(result_map))
+        base_val = int(input("Enter base:\n"))
+        print(tuple(map(lambda f: f(base_val), result_map)))
+        
+    #== Targil7c
+    
+    p = create_pipeline()
+    p = add_to_pipeline(p, clean_text)
+    p = add_to_pipeline(p, capitalize_text)
+    p = add_to_pipeline(p, add_stars)
+    user_txt = input("enter text:\n")
+    if not user_txt.strip():
+        print("Invalid input")
+    else:
+        print(p(user_txt))
 
 if __name__ == "__main__":
-    main()
+    main() 
